@@ -48,11 +48,14 @@ public class SaveAsFileAction extends GenericAction
             dir = new File(System.getProperty("user.home"));
         JFileChooser chooser = new JFileChooser(dir);
         FileNameExtensionFilter filter1 = new FileNameExtensionFilter(
-            "Starmade Ship File", "smd2");
+            "Starmade Ship File (*.smd2)", "smd2");
         FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
-                "Starmade Blueprint Zip", "zip");
+                "Starmade Blueprint Zip (*.zip)", "zip");
+        FileNameExtensionFilter filter3 = new FileNameExtensionFilter(
+                "Starmade Exported Ship File (*.sment)", "sment");
         chooser.addChoosableFileFilter(filter1);
         chooser.addChoosableFileFilter(filter2);
+        chooser.addChoosableFileFilter(filter3);
         chooser.setFileFilter(filter1);
         int returnVal = chooser.showSaveDialog(mFrame);
         if(returnVal != JFileChooser.APPROVE_OPTION)
@@ -63,10 +66,15 @@ public class SaveAsFileAction extends GenericAction
             if (!smb2.getName().endsWith(".smd2"))
                 smb2 = new File(smb2.toString()+".smd2");
         }
-        else
+        else if (chooser.getFileFilter() == filter2)
         {
             if (!smb2.getName().endsWith(".zip"))
                 smb2 = new File(smb2.toString()+".zip");
+        }
+        else if (chooser.getFileFilter() == filter3)
+        {
+            if (!smb2.getName().endsWith(".sment"))
+                smb2 = new File(smb2.toString()+".sment");
         }
         StarMadeLogic.getProps().setProperty("open.file.dir", smb2.getParent());
         StarMadeLogic.saveProps();
@@ -88,7 +96,7 @@ public class SaveAsFileAction extends GenericAction
 			{
 		        try
 		        {
-                    if (fout.getName().endsWith(".zip"))
+                    if (fout.getName().endsWith(".zip") || fout.getName().endsWith(".sment"))
                         BlueprintLogic.saveBlueprintZip(grid, fout, cb);
                     else //if (fout.getName().endsWith(".smd2"))
 		                DataLogic.writeFile(p, d, new FileOutputStream(fout), true, cb);

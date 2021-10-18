@@ -421,7 +421,7 @@ public class DataLogic
     }
 
     public static void writeFilesZip(Map<Point3i, Data> data, ZipOutputStream zos,
-            String baseName, IPluginCallback cb) throws IOException
+            String prefix, String baseName, IPluginCallback cb) throws IOException
     {
         if (cb != null)
         {
@@ -430,7 +430,7 @@ public class DataLogic
         }
         for (Point3i p : data.keySet())
         {
-            ZipEntry ze = new ZipEntry("DATA/"+baseName+"."+p.x+"."+p.y+"."+p.z+".smd2");
+            ZipEntry ze = new ZipEntry(prefix + "DATA/"+baseName+"."+p.x+"."+p.y+"."+p.z+".smd2");
             zos.putNextEntry(ze);
             writeFile(p, data.get(p), zos, false, cb);
             if (cb != null)

@@ -140,24 +140,29 @@ public class BlueprintLogic
         try
         {
             String name = zipFile.getName();
-            name = name.substring(0, name.length() - 4);
+            int o = name.lastIndexOf('.');
+            if (o > 0)
+                name = name.substring(0, o);
+            String prefix = "";
+            if (zipFile.getName().endsWith(".sment"))
+                prefix = name+"/";
             Map<Point3i, Data> data = ShipLogic.getData(grid);
             ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
             // header file
             Header header = HeaderLogic.make(grid);
-            ZipEntry headerEntry = new ZipEntry("header.smbph");
+            ZipEntry headerEntry = new ZipEntry(prefix+"header.smbph");
             zos.putNextEntry(headerEntry);
             HeaderLogic.writeFile(header, zos, false);
             Logic logic = LogicLogic.make(grid);
-            ZipEntry logicEntry = new ZipEntry("logic.smbpl");
+            ZipEntry logicEntry = new ZipEntry(prefix+"logic.smbpl");
             zos.putNextEntry(logicEntry);
             LogicLogic.writeFile(logic, zos, false);
             Meta meta = MetaLogic.make(grid);
-            ZipEntry metaEntry = new ZipEntry("meta.smbpm");
+            ZipEntry metaEntry = new ZipEntry(prefix+"meta.smbpm");
             zos.putNextEntry(metaEntry);
             MetaLogic.writeFile(meta, zos, false);
             // data file
-            DataLogic.writeFilesZip(data, zos, name, cb);
+            DataLogic.writeFilesZip(data, zos, prefix, name, cb);
             zos.close();
         }
         catch (IOException e1)

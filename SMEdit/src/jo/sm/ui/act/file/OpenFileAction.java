@@ -34,9 +34,9 @@ public class OpenFileAction extends GenericAction
             dir = new File(System.getProperty("user.home"));
         JFileChooser chooser = new JFileChooser(dir);
         FileNameExtensionFilter filter1 = new FileNameExtensionFilter(
-            "Starmade Ship File", "smd2");
+            "Starmade Ship File (*.smd2)", "smd2");
         FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
-                "Starmade Exported Ship File", "sment");
+                "Starmade Exported Ship File (*.sment)", "sment");
         chooser.addChoosableFileFilter(filter1);
         chooser.addChoosableFileFilter(filter2);
         chooser.setFileFilter(filter1);
