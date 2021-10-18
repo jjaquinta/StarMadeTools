@@ -10,6 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jo.sm.data.SparseMatrix;
+import jo.sm.logic.BlueprintLogic;
 import jo.sm.logic.RunnableLogic;
 import jo.sm.logic.StarMadeLogic;
 import jo.sm.mods.IPluginCallback;
@@ -48,17 +49,25 @@ public class SaveAsFileAction extends GenericAction
         JFileChooser chooser = new JFileChooser(dir);
         FileNameExtensionFilter filter1 = new FileNameExtensionFilter(
             "Starmade Ship File", "smd2");
-        //FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
-        //        "Starmade Exported Ship File", "sment");
+        FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
+                "Starmade Blueprint Zip", "zip");
         chooser.addChoosableFileFilter(filter1);
-        //chooser.addChoosableFileFilter(filter2);
+        chooser.addChoosableFileFilter(filter2);
         chooser.setFileFilter(filter1);
         int returnVal = chooser.showSaveDialog(mFrame);
         if(returnVal != JFileChooser.APPROVE_OPTION)
             return;
         File smb2 = chooser.getSelectedFile();
-        if (!smb2.getName().endsWith(".smd2"))
-            smb2 = new File(smb2.toString()+".smd2");
+        if (chooser.getFileFilter() == filter1)
+        {
+            if (!smb2.getName().endsWith(".smd2"))
+                smb2 = new File(smb2.toString()+".smd2");
+        }
+        else
+        {
+            if (!smb2.getName().endsWith(".zip"))
+                smb2 = new File(smb2.toString()+".zip");
+        }
         StarMadeLogic.getProps().setProperty("open.file.dir", smb2.getParent());
         StarMadeLogic.saveProps();
         String name = smb2.getName();
@@ -66,7 +75,7 @@ public class SaveAsFileAction extends GenericAction
         spec.setType(ShipSpec.FILE);
         spec.setName(name);
         spec.setFile(smb2);
-        SparseMatrix<Block> grid = StarMadeLogic.getModel();
+        final SparseMatrix<Block> grid = StarMadeLogic.getModel();
         Map<Point3i, Data> data = ShipLogic.getData(grid);
         final Point3i p = new Point3i();
         final Data d = data.get(p);
@@ -79,7 +88,10 @@ public class SaveAsFileAction extends GenericAction
 			{
 		        try
 		        {
-		            DataLogic.writeFile(p, d, new FileOutputStream(fout), true, cb);
+                    if (fout.getName().endsWith(".zip"))
+                        BlueprintLogic.saveBlueprintZip(grid, fout, cb);
+                    else //if (fout.getName().endsWith(".smd2"))
+		                DataLogic.writeFile(p, d, new FileOutputStream(fout), true, cb);
 		        }
 		        catch (IOException e)
 		        {

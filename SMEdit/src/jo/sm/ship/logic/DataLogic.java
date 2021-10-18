@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import jo.sm.data.BlockTypes;
 import jo.sm.data.CubeIterator;
@@ -416,5 +418,25 @@ public class DataLogic
         }        
     	if (cb != null)
     		cb.endTask();;
+    }
+
+    public static void writeFilesZip(Map<Point3i, Data> data, ZipOutputStream zos,
+            String baseName, IPluginCallback cb) throws IOException
+    {
+        if (cb != null)
+        {
+            cb.setStatus("Writing "+baseName);
+            cb.startTask(data.size());
+        }
+        for (Point3i p : data.keySet())
+        {
+            ZipEntry ze = new ZipEntry("DATA/"+baseName+"."+p.x+"."+p.y+"."+p.z+".smd2");
+            zos.putNextEntry(ze);
+            writeFile(p, data.get(p), zos, false, cb);
+            if (cb != null)
+                cb.workTask(1);
+        }        
+        if (cb != null)
+            cb.endTask();;
     }
 }
