@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.BeanInfo;
 import java.beans.Customizer;
 import java.beans.IntrospectionException;
@@ -105,6 +107,13 @@ public class BeanEditDlg extends JDialog
             {
                 doCancel();
             }});
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                doClose();
+            }
+        });
         
         mCustomizer.setObject(mBean);
         //setSize(640, 480);
@@ -123,6 +132,11 @@ public class BeanEditDlg extends JDialog
         mBean = null;
         setVisible(false);
         dispose();
+    }
+    
+    private void doClose()
+    {
+        mBean = null;
     }
 
     public Object getBean()

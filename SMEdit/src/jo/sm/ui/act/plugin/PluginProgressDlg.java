@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -11,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.WindowConstants;
 
 import jo.sm.logic.utils.StringUtils;
 import jo.sm.mods.IPluginCallback;
@@ -49,6 +52,14 @@ public class PluginProgressDlg extends JDialog implements IPluginCallback
         mCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
+            {
+                mPleaseCancel = true;
+            }
+        });
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e)
             {
                 mPleaseCancel = true;
             }

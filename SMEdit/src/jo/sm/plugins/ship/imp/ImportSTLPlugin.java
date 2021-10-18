@@ -64,7 +64,7 @@ public class ImportSTLPlugin implements IBlocksPlugin
         ImportSTLParameters params = (ImportSTLParameters)p;        
         try
         {
-            Hull3f hull = STLLogic.readFile(params.getFile());
+            Hull3f hull = STLLogic.readFile(params.getFile(), cb);
             System.out.println("Read "+hull.getTriangles().size()+" triangles");
             if (hull.getTriangles().size() == 0)
                 throw new IllegalArgumentException("STL File "+params.getFile()+" has no triangles defined in it.");

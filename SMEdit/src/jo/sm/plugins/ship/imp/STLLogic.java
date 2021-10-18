@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import jo.sm.mods.IPluginCallback;
 import jo.vecmath.Point3f;
 import jo.vecmath.ext.Hull3f;
 import jo.vecmath.ext.Triangle3f;
@@ -11,7 +12,7 @@ import jo.vecmath.ext.Triangle3f;
 public class STLLogic
 {
 
-	public static Hull3f readFile(String stlFileName) throws IOException
+	public static Hull3f readFile(String stlFileName, IPluginCallback cb) throws IOException
 	{
 	    Hull3f stl = new Hull3f();
         // assume binary
@@ -20,6 +21,7 @@ public class STLLogic
         is.read(header); // skip header
         // TODO: check for ascii
         long numTri = Integer.reverseBytes(is.readInt());
+        cb.startTask((int)(numTri/256));
         for (int i = 0; i < numTri; i++)
         {
             @SuppressWarnings("unused")
@@ -40,8 +42,11 @@ public class STLLogic
             is.readUnsignedShort(); // attribute
             Triangle3f tri = new Triangle3f(new Point3f(p1x, p1y, p1z), new Point3f(p2x, p2y, p2z), new Point3f(p3x, p3y, p3z));
             stl.getTriangles().add(tri);
+            if (i%256 == 255)
+                cb.workTask(1);
         }
         is.close();
+        cb.endTask();
         return stl;
     }
     
