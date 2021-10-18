@@ -169,6 +169,7 @@ public class StarMadeLogic
             "jo.sm.plugins.ship.hull.HullPlugin",
             "jo.sm.plugins.ship.imp.ImportBinvoxPlugin",
             "jo.sm.plugins.ship.imp.ImportOBJPlugin",
+            "jo.sm.plugins.ship.imp.ImportSTLPlugin",
             "jo.sm.plugins.ship.imp.ImportSchematicPlugin",
             "jo.sm.plugins.ship.imp.ImportVRMLPlugin",
             "jo.sm.plugins.ship.move.MovePlugin",

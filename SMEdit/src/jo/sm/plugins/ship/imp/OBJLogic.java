@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
 
 import jo.sm.logic.utils.FloatUtils;
+import jo.sm.logic.utils.IntegerUtils;
 import jo.vecmath.Point2f;
 import jo.vecmath.Point3f;
 import jo.vecmath.ext.Hull3f;
@@ -76,15 +77,16 @@ public class OBJLogic
 	            while (st.hasMoreTokens())
 	            {
 	                String v = st.nextToken();
-	                StringTokenizer st2 = new StringTokenizer(v, "/");
-	                if (st2.hasMoreTokens())
+	                String[] vs = v.split("/");
+	                if (vs.length > 0)
 	                {
-	                	int idx = Integer.parseInt(st2.nextToken());
+	                	int idx = Integer.parseInt(vs[0]);
 	                	points.add(verts.get(idx - 1));
-	                	if (st2.hasMoreTokens())
+	                	if (vs.length > 1)
 	                	{
-	                		idx = Integer.parseInt(st2.nextToken());
-		                	uvs.add(textures.get(idx - 1));
+	                		idx = IntegerUtils.parseInt(vs[1]);
+	                		if (idx > 0)
+	                		    uvs.add(textures.get(idx - 1));
 	                	}
 	                }
 	            }
