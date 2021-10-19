@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import jo.sm.logic.utils.FloatUtils;
 import jo.sm.logic.utils.IntegerUtils;
+import jo.sm.mods.IPluginCallback;
 import jo.vecmath.Point2f;
 import jo.vecmath.Point3f;
 import jo.vecmath.ext.Hull3f;
@@ -25,24 +26,32 @@ import jo.vecmath.logic.ext.Triangle3fLogic;
 public class OBJLogic
 {
 
-	public static Hull3f readFile(String objFileName) throws IOException
+	public static Hull3f readFile(String objFileName, IPluginCallback cb) throws IOException
 	{
 		File objFile = new File(objFileName);
+		cb.startTask((int)(objFile.length()/65536L));
 	    BufferedReader rdr = new BufferedReader(new FileReader(objFile));
 	    Hull3f hull = new Hull3f();
 	    List<Point3f> verts = new ArrayList<Point3f>();
 	    List<Point2f> textures = new ArrayList<Point2f>();
 	    Map<String, OBJMaterial> materials = new HashMap<String, OBJMaterial>();
 	    OBJMaterial material = null;
+	    int done = 0;
 	    for (;;)
 	    {
 	        String inbuf = rdr.readLine();
 	        if (inbuf == null)
 	            break;
+	        done += inbuf.length() + 2;
+	        if (done >= 65536)
+	        {
+	            cb.workTask(1);
+	            done -= 65536;
+	        }
 	        if (inbuf.startsWith("v "))
 	        {   // vertex
 	            StringTokenizer st = new StringTokenizer(inbuf, " ");
-	            if (st.countTokens() != 4)
+	            if (st.countTokens() < 4)
 	            {
 	                System.err.println("Unrecognized vertex line '"+inbuf+"'");
 	                break;
@@ -81,6 +90,8 @@ public class OBJLogic
 	                if (vs.length > 0)
 	                {
 	                	int idx = Integer.parseInt(vs[0]);
+	                    if (idx < 0)
+	                        idx = verts.size() + idx + 1;
 	                	points.add(verts.get(idx - 1));
 	                	if (vs.length > 1)
 	                	{
@@ -119,6 +130,7 @@ public class OBJLogic
 	        }
 	    }
 	    rdr.close();
+	    cb.endTask();
 	    return hull;
 	}
 

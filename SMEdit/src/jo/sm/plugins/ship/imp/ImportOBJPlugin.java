@@ -64,7 +64,7 @@ public class ImportOBJPlugin implements IBlocksPlugin
         ImportOBJParameters params = (ImportOBJParameters)p;        
         try
         {
-            Hull3f hull = OBJLogic.readFile(params.getFile());
+            Hull3f hull = OBJLogic.readFile(params.getFile(), cb);
             System.out.println("Read "+hull.getTriangles().size()+" triangles");
             if (hull.getTriangles().size() == 0)
                 throw new IllegalArgumentException("OBJ File "+params.getFile()+" has no triangles defined in it.");
