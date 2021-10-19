@@ -22,15 +22,17 @@ public class BegPanel extends JPanel
     private static final int CHOP = 120;
 
     public static final String THE_RAIDERS_LAMENT_AUDIO = "http://podiobooks.com/title/the-raiders-lament";
-    public static final String THE_RAIDERS_LAMENT = "https://www.smashwords.com/books/view/347157";
+    public static final String SMASHWORDS_BOOKS = "https://www.smashwords.com/profile/view/jjaquinta";
+    public static final String AMAZON_BOOKS = "https://www.amazon.com/s?i=digital-text&rh=p_27%3AJolie+Jaquinta&s=relevancerank";
     public static final String DOCUMENTATION = "http://www.starmadewiki.com/wiki/SMEdit";
     
     private int mMessageOffset;
     private int mRepeats;
     
     private JLabel  mStatus;
-    private JButton mAudio;
-    private JButton mText;
+    private JButton mAudioBook;
+    private JButton mPaidBook;
+    private JButton mFreeBook;
     
     public BegPanel()
     {
@@ -38,35 +40,44 @@ public class BegPanel extends JPanel
         // instantiate
         mStatus = new JLabel(MESSAGE.substring(0, CHOP));
         setBackground(Color.cyan);
-        mAudio = new JButton("Audiobook");
-        mText = new JButton("E-book");
-        Dimension d1 = mAudio.getPreferredSize();
-        Dimension d2 = mText.getPreferredSize();
+        mAudioBook = new JButton("Audiobook");
+        mPaidBook = new JButton("E-book (sponsored)");
+        mFreeBook = new JButton("E-book (free)");
+        Dimension d1 = mAudioBook.getPreferredSize();
+        Dimension d2 = mPaidBook.getPreferredSize();
         mStatus.setPreferredSize(new Dimension(1024 - d1.width - d2.width, Math.max(d1.height, d2.height)));
         // layout
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         add("Center", mStatus);
         JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(1, 2));
-        buttons.add(mAudio);
-        buttons.add(mText);
+        buttons.setLayout(new GridLayout(1, 3));
+        buttons.add(mAudioBook);
+        buttons.add(mPaidBook);
+        buttons.add(mFreeBook);
         add("East", buttons);
         // link
         Thread t = new Thread("beg_ticker") { public void run() { doTicker(); } };
         t.setDaemon(true);
         t.start();
-        mText.addActionListener(new ActionListener(){
+        mPaidBook.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ev)
             {
-                doGoto(THE_RAIDERS_LAMENT);
+                doGoto(AMAZON_BOOKS);
             }            
         });
-        mText.addActionListener(new ActionListener(){
+        mAudioBook.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ev)
             {
                 doGoto(THE_RAIDERS_LAMENT_AUDIO);
+            }            
+        });
+        mFreeBook.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ev)
+            {
+                doGoto(SMASHWORDS_BOOKS);
             }            
         });
     }
@@ -125,9 +136,11 @@ public class BegPanel extends JPanel
             + " for donating quite a bit of it! "
             + "So I've now officially considered this software 'paid for' and have removed the begware nagger. "
             + "If you are interested you can still download my book. I'd appreciate it, even more if you read it "
-            + "and review it. You can still choose to donate by buying. Further proceeds will go towards buying "
-            + "the other Minecraft kids for my daughter! "
-            + "The buttons below will take you to the audiobook page (free) and the"
-            + "eBook page (first 20%, the full book for $.99. "
+            + "and review it. You can still choose to donate by buying the sponsored book. But, like this software, "
+            + "there will always be a free version available. "
+            + "Further proceeds will go towards buying "
+            + "the other Minecraft kits for my daughters! "
+            + "The buttons below will take you to the audiobook page (free), the sponsored ebook ($0.99), and the"
+            + "free eBook. "
             + "Thank you for using and supporting SMEdit. ";
 }

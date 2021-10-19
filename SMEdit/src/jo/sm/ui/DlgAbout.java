@@ -42,8 +42,9 @@ public class DlgAbout extends JDialog
 		}
         mScroller = new JScrollPane(mMessage);
         JButton ok = new JButton("Close");
-        JButton audio = new JButton("Audiobook");
-        JButton ebook = new JButton("E-book");
+        JButton audioBook = new JButton("Audiobook");
+        JButton paidBook = new JButton("E-book (sponsored)");
+        JButton freeBook = new JButton("E-book (free)");
         JButton doc = new JButton("Documentation");
         JPanel client = new JPanel();
         getContentPane().add(client);
@@ -55,8 +56,9 @@ public class DlgAbout extends JDialog
         buttonBar.setLayout(new FlowLayout());
         buttonBar.add(ok);
         buttonBar.add(doc);
-        buttonBar.add(audio);
-        buttonBar.add(ebook);
+        buttonBar.add(audioBook);
+        buttonBar.add(paidBook);
+        buttonBar.add(freeBook);
         // link
         ok.addActionListener(new ActionListener(){
             @Override
@@ -70,14 +72,21 @@ public class DlgAbout extends JDialog
             {
                 doGoto(BegPanel.DOCUMENTATION);
             }});
-        ebook.addActionListener(new ActionListener(){
+        paidBook.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ev)
             {
-                doGoto(BegPanel.THE_RAIDERS_LAMENT);
+                doGoto(BegPanel.AMAZON_BOOKS);
             }            
         });
-        audio.addActionListener(new ActionListener(){
+        freeBook.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ev)
+            {
+                doGoto(BegPanel.SMASHWORDS_BOOKS);
+            }            
+        });
+        audioBook.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ev)
             {
